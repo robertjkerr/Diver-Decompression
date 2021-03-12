@@ -1,4 +1,4 @@
-package tissues;
+package DecoLib.tissues;
 
 public class cell {
 	//Class for individual tissue compartment
@@ -20,7 +20,6 @@ public class cell {
 				double AN2, double BN2, double AHe, double BHe) {
 		
 		this.pAmb = pAmb;
-
 		this.AN2 = AN2;
 		this.BN2 = BN2;
 		this.AHe = AHe;
@@ -45,7 +44,7 @@ public class cell {
 		//Basic eqn for determining pressure differential
 		double dpN2 = kN2*(pN2 - cellPres[0]);
 		double dpHe = kHe*(pHe - cellPres[1]);
-		double[] dPdt = {dpN2,dpHe};
+		double[] dPdt = new double[] {dpN2,dpHe};
 		return dPdt;
 	}
 
@@ -58,10 +57,11 @@ public class cell {
 		cellPres = new double[]{cellPres[0]+dpN2*dt, cellPres[1]+dpHe*dt};
 	}
 
+	//Determines ascent ceiling
 	public double ceiling () {
 		double A = ((AN2*cellPres[0])+(AHe*cellPres[1]))/(cellPres[0]+cellPres[1]);
 		double B = ((BN2*cellPres[0])+(BHe*cellPres[1]))/(cellPres[0]+cellPres[1]);
 		double ceiling = ((cellPres[0]+cellPres[1])-A)*B;
-		return ceiling;
+		return (ceiling-1)*10;
 	}
 }

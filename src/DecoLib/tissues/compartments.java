@@ -1,4 +1,4 @@
-package tissues;
+package DecoLib.tissues;
 
 public class compartments {
     //Collective class for all tissue compartments in the body
@@ -11,7 +11,7 @@ public class compartments {
     private double[] AValsHe;
     private double[] BValsN2;
     private double[] BValsHe;
-    private double[] gasMix;
+    private double[] gasMix; //[%fO2,%fHe]
     private int n;
     public double pAmb;
 
@@ -30,11 +30,11 @@ public class compartments {
         this.BValsHe = BValsHe;
 
         n = halfLivesN2.length;
-        this.gasMix = gasMix;
+        this.gasMix = new double[] {(100-gasMix[0]-gasMix[1])/100, gasMix[1]/100};
         //Initialises all the tissues
         cells = new cell[n];
         for (int i=0; i<n; i++) {
-            cells[i] = new cell(pAmb, gasMix, cellPressures[i], halfLivesN2[i], halfLivesHe[i],
+            cells[i] = new cell(pAmb, this.gasMix, cellPressures[i], halfLivesN2[i], halfLivesHe[i],
                                 AValsN2[i], BValsN2[i], AValsHe[i], BValsHe[i]);}
     }
 
@@ -51,13 +51,14 @@ public class compartments {
             cell.changePAmb(pAmb);}
     }
 
+    //Finds maximum ascent ceiling of all the tissue cells
     public double ceiling () {
         double ceiling = 0;
         for (cell cell: cells) {
             if (cell.ceiling() > ceiling) {
                 ceiling = cell.ceiling();}}
-
-        ceiling = 3 - ceiling%3 + ceiling;
+        //System.out.println(ceiling);
+        ceiling = ceiling - ceiling%3;
         return ceiling;
     }
 

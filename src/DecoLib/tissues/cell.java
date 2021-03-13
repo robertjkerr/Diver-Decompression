@@ -1,8 +1,11 @@
 package DecoLib.tissues;
 
+//import java.lang.Math;
+
 public class cell {
-	//Class for individual tissue compartment
+	//Class for individual tissue compartment (cell)
 	//Local subroutines find pressure differential (for both nitrogen and helium)
+	// and ascent ceiling for an individual cell. Absolute ascent ceiling is max of all cells
 	//Finds new cell inert gas pressures after a short time
 
 	private double kN2;
@@ -12,8 +15,9 @@ public class cell {
 	private double AHe;
 	private double BHe;
 	public double pAmb;
-	public double[] gasMix; //[fN2,fHe]
-	public double[] cellPres; //[pN2,pHe]
+	public double[] gasMix; //{fN2,fHe}
+	public double[] cellPres; //{pN2,pHe}
+	public double realCeiling;
 
 
 	public cell (double pAmb, double[] gasMix, double[] cellPres, double halfTimeN2, double halfTimeHe, 
@@ -34,6 +38,8 @@ public class cell {
 
 	public void changePAmb (double newPAmb) {
 		//Changes ambient pressure (i.e. depth change)
+		//double t = (pAmb-newPAmb)*60/3;
+		//advT(t,3/60);
 		pAmb = newPAmb;
 	}
 
@@ -48,6 +54,15 @@ public class cell {
 		return dPdt;
 	}
 
+	/*
+	private double[] ppGases () {
+		double pN2 = pAmb * gasMix[0];
+		double pHe = pAmb * gasMix[1];
+		double pO2 = pAmb * (1-gasMix[0]-gasMix[1]);
+		return new double[] {pN2, pHe, pO2};
+	}
+	*/
+
 	//Advances time for the tissue. Assumes constant dP/dt for a short time
 	public void advT (double dt) {
 		double[] dPdt = dPdt();
@@ -55,6 +70,11 @@ public class cell {
 		double dpHe = dPdt[1];
 		//Determines new cell pressure from pressure differential
 		cellPres = new double[]{cellPres[0]+dpN2*dt, cellPres[1]+dpHe*dt};
+
+		//Schreiner
+		//cellPres[0] = ppGases()[0] + R*(t - 1/kN2) - (ppGases()[0] - cellPres[0] - R/kN2)*Math.exp(-kN2*t);
+		//cellPres[1] = ppGases()[1] + R*(t - 1/kHe) - (ppGases()[1] - cellPres[1] - R/kHe)*Math.exp(-kHe*t);
+
 	}
 
 	//Determines ascent ceiling
@@ -62,6 +82,11 @@ public class cell {
 		double A = ((AN2*cellPres[0])+(AHe*cellPres[1]))/(cellPres[0]+cellPres[1]);
 		double B = ((BN2*cellPres[0])+(BHe*cellPres[1]))/(cellPres[0]+cellPres[1]);
 		double ceiling = ((cellPres[0]+cellPres[1])-A)*B;
-		return (ceiling-1)*10;
+		realCeiling = (ceiling-1)*10;
+		ceiling = realCeiling+3;
+		if (ceiling > 3 && ceiling < 6) {
+			ceiling = 6;
+		}
+		return ceiling;
 	}
 }

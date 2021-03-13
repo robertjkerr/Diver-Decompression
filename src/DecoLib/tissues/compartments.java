@@ -11,10 +11,12 @@ public class compartments {
     private double[] AValsHe;
     private double[] BValsN2;
     private double[] BValsHe;
-    private double[] gasMix; //[%fO2,%fHe]
+    private double[] gasMix; //{fN2,fHe}
+    public double[] liveGas;
     private int n;
     public double pAmb;
 
+    //Enter gas mix as {%fO2,%fHe}
     public compartments (double pAmb, double[] gasMix, double[][] cellPressures, 
                         double[] halfLivesN2, double[] halfLivesHe, 
                         double[] AValsN2, double[] AValsHe, 
@@ -30,6 +32,7 @@ public class compartments {
         this.BValsHe = BValsHe;
 
         n = halfLivesN2.length;
+        this.liveGas = gasMix;
         this.gasMix = new double[] {(100-gasMix[0]-gasMix[1])/100, gasMix[1]/100};
         //Initialises all the tissues
         cells = new cell[n];
@@ -38,27 +41,36 @@ public class compartments {
                                 AValsN2[i], BValsN2[i], AValsHe[i], BValsHe[i]);}
     }
 
-    //Advances time for all compartments
+    //Advances time for all compartments. R is rate of change of depth.
     public void advT (double dt) {
         for (cell cell: cells) {
             cell.advT(dt);}
     }
 
     //Changes ambient pressure for all tissues
-    public void changePAmb (double pAmb) {
-        this.pAmb = pAmb;
+    public void changePAmb (double newPAmb) {
+        pAmb = newPAmb;
         for (cell cell: cells) {
             cell.changePAmb(pAmb);}
     }
 
-    //Finds maximum ascent ceiling of all the tissue cells
+    //Finds the (conservative) ascent ceiling of all the tissue cells
     public double ceiling () {
         double ceiling = 0;
         for (cell cell: cells) {
             if (cell.ceiling() > ceiling) {
                 ceiling = cell.ceiling();}}
-        //System.out.println(ceiling);
         ceiling = ceiling - ceiling%3;
+        return ceiling;
+    }
+
+    //Gets the absolute ceiling
+    public double realCeiling () {
+        double ceiling = 0;
+        for (cell cell: cells) {
+            cell.ceiling();
+            if (cell.realCeiling > ceiling) {
+                ceiling = cell.realCeiling;}}
         return ceiling;
     }
 
@@ -70,5 +82,17 @@ public class compartments {
         compartments copyObj = new compartments(pAmb, gasMix, cellPressures, halfLivesN2, halfLivesHe, 
                                                 AValsN2, AValsHe, BValsN2, BValsHe);
         return copyObj;
+    }
+
+    //Changes gas being breathed
+    public void switchGas (double[] newGas) {
+        this.gasMix = new double[] {(100-newGas[0]-newGas[1])/100, newGas[1]/100};
+        for (cell cell: cells) {
+            cell.gasMix = this.gasMix;
+        }
+    }
+
+    public double getPAmb () {
+        return pAmb;
     }
 }

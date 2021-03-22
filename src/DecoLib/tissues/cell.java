@@ -1,7 +1,5 @@
 package DecoLib.tissues;
 
-//import java.lang.Math;
-
 public class cell {
 	//Class for individual tissue compartment (cell)
 	//Local subroutines find pressure differential (for both nitrogen and helium)
@@ -14,16 +12,20 @@ public class cell {
 	private double BN2;
 	private double AHe;
 	private double BHe;
+
 	public double pAmb;
 	public double[] gasMix; //{fN2,fHe}
 	public double[] cellPres; //{pN2,pHe}
 	public double realCeiling;
+	public double GF;
 
 
-	public cell (double pAmb, double[] gasMix, double[] cellPres, double halfTimeN2, double halfTimeHe, 
+	public cell (double GF, double pAmb, double[] gasMix, double[] cellPres, double halfTimeN2, double halfTimeHe, 
 				double AN2, double BN2, double AHe, double BHe) {
 		
 		this.pAmb = pAmb;
+		this.GF = GF;
+
 		this.AN2 = AN2;
 		this.BN2 = BN2;
 		this.AHe = AHe;
@@ -34,6 +36,7 @@ public class cell {
 		//Determining k values from half-times (in minutes)
 		kN2 = 0.693147/(halfTimeN2*60);
 		kHe = 0.693147/(halfTimeHe*60);
+
 	}
 
 	public void changePAmb (double newPAmb) {
@@ -77,12 +80,20 @@ public class cell {
 
 	}
 
+	public void change_GF(double newGF) {
+		GF = newGF;
+		//System.out.println(GF);
+	}
+
 	//Determines ascent ceiling
 	public double ceiling () {
+
 		double A = ((AN2*cellPres[0])+(AHe*cellPres[1]))/(cellPres[0]+cellPres[1]);
 		double B = ((BN2*cellPres[0])+(BHe*cellPres[1]))/(cellPres[0]+cellPres[1]);
-		double ceiling = ((cellPres[0]+cellPres[1])-A)*B;
+
+		double ceiling = ((cellPres[0]+cellPres[1])-GF*A)*(B-GF*(1-B));
 		realCeiling = (ceiling-1)*10;
+
 		ceiling = realCeiling+3;
 		if (ceiling > 3 && ceiling < 6) {
 			ceiling = 6;

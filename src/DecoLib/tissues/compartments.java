@@ -15,14 +15,20 @@ public class compartments {
     public double[] liveGas;
     private int n;
     public double pAmb;
+    public double GFLo;
+    public double GFHi;
+    private double GFgrad;
+    private boolean firstStop = true;
 
     //Enter gas mix as {%fO2,%fHe}
-    public compartments (double pAmb, double[] gasMix, double[][] cellPressures, 
+    public compartments (double GFLo, double GFHi, double pAmb, double[] gasMix, double[][] cellPressures, 
                         double[] halfLivesN2, double[] halfLivesHe, 
                         double[] AValsN2, double[] AValsHe, 
                         double[] BValsN2, double[] BValsHe) {
 
         this.pAmb = pAmb;
+        this.GFHi = GFHi;
+        this.GFLo = GFLo;
         
         this.halfLivesN2 = halfLivesN2;
         this.halfLivesHe = halfLivesHe;
@@ -37,8 +43,9 @@ public class compartments {
         //Initialises all the tissues
         cells = new cell[n];
         for (int i=0; i<n; i++) {
-            cells[i] = new cell(pAmb, this.gasMix, cellPressures[i], halfLivesN2[i], halfLivesHe[i],
+            cells[i] = new cell(GFHi, pAmb, this.gasMix, cellPressures[i], halfLivesN2[i], halfLivesHe[i],
                                 AValsN2[i], BValsN2[i], AValsHe[i], BValsHe[i]);}
+
     }
 
     //Advances time for all compartments. R is rate of change of depth.
@@ -50,6 +57,10 @@ public class compartments {
     //Changes ambient pressure for all tissues
     public void changePAmb (double newPAmb) {
         pAmb = newPAmb;
+        if (firstStop == false) {
+            change_GF();}
+    
+        
         for (cell cell: cells) {
             cell.changePAmb(pAmb);}
     }
@@ -79,7 +90,7 @@ public class compartments {
         double[][] cellPressures = new double[n][2];
         for (int i=0; i<n; i++) {
             cellPressures[i] = cells[i].cellPres;}
-        compartments copyObj = new compartments(pAmb, gasMix, cellPressures, halfLivesN2, halfLivesHe, 
+        compartments copyObj = new compartments(GFLo, GFHi, pAmb, gasMix, cellPressures, halfLivesN2, halfLivesHe, 
                                                 AValsN2, AValsHe, BValsN2, BValsHe);
         return copyObj;
     }
@@ -94,5 +105,19 @@ public class compartments {
 
     public double getPAmb () {
         return pAmb;
+    }
+
+    private void change_GF () {
+        double newGF = GFgrad*(pAmb-1.3)+GFHi;
+        //System.out.println(newGF);
+
+        for (cell cell: cells) {
+            cell.change_GF(newGF);}
+    }
+
+    public void set_GFgrad (double firstStopDepth) {
+        firstStop = false;
+        double firstCeil = firstStopDepth/10 + 1;
+        GFgrad = (GFHi-GFLo)/(1-firstCeil);
     }
 }

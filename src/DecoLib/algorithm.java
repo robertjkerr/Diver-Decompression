@@ -41,17 +41,24 @@ public class algorithm {
 
     //Ascends compartments to new depth
     private void ascendToCeiling () {
-        double newPAmb = compartments.ceiling()/10 + 1;
+        double newPAmb;
+        if (compartments.ceiling() < 3){
+            newPAmb = (compartments.ceiling())/10 + 1;
+        }
+        else {
+            newPAmb = (compartments.ceiling()+3)/10 + 1;
+        }
+        
         compartments.changePAmb(newPAmb);
     }
 
+    //Checks if a richer gas can be switched to
     private void checkGas () {
         double[] richMix = liveGas();
         for (double[] gas: gases) {
             if (gas[0]>richMix[0] && pO2()<1.6) {
                 richMix = gas;
                 compartments.switchGas(richMix);
-                //System.out.println(richMix[0]);
             }}
     }
     
@@ -60,20 +67,24 @@ public class algorithm {
         double depth = (compartments.pAmb-1)*10;
         depth = depth - depth%3;
         //Gets number of deco stops
-        int depthSteps = (int) compartments.ceiling()/3 - 1;
-        //profile = {{depth,time},{depth,time}, ...}
-        int[][] profile = new int[depthSteps][2];
+        
+        ascendToCeiling();
+        compartments.set_GFgrad(compartments.ceiling());
 
         //Gets stop times
-        for (int i=0; i<depthSteps; i++) {
+        int[][] profile = new int[][] {};
+        double stopDepth = compartments.ceiling();
+
+        while (stopDepth > 6) {
             ascendToCeiling();
             //Switch to richer gas if possible
             checkGas();
-            double stopDepth = compartments.ceiling();
+            stopDepth = compartments.ceiling();
             double stopTime = waitAtDepth();
-            profile[i][0] = (int) stopDepth;
-            profile[i][1] = (int) (stopTime/60 - (stopTime/60)%1) + 1;
+            profile = append(profile, new int[] {(int) stopDepth, 
+                        (int) (stopTime/60 - (stopTime/60)%1) + 1});
         }
+
         return profile;
     }
 
@@ -88,5 +99,18 @@ public class algorithm {
                 ceiling = compartments.ceiling();}
         }
         return NDL/60;
+    }
+
+    private int[][] append(int[][] inArr, int[] elem) {
+        int[][] outArr = new int[inArr.length+1][2];
+        for (int i=0; i<inArr.length +1; i++) {
+            if (i<inArr.length) {
+                outArr[i] = inArr[i];
+            }
+            else {
+                outArr[i] = elem;
+            }
+        }
+        return outArr;
     }
 }

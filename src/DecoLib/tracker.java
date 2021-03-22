@@ -11,10 +11,10 @@ public class tracker {
     private double dt;
     public double[][] gases;
 
-    public tracker (double pAmb, double[][] gasMixes, double[][] cellPressures, double dt) {
+    public tracker (double pAmb, double[][] gasMixes, double[][] cellPressures, double dt, double GFLo, double GFHi) {
         this.dt = dt;
         compartments_init compartments_init = new compartments_init();
-        compartments = compartments_init.get_compartments(pAmb, gasMixes[0], cellPressures);
+        compartments = compartments_init.get_compartments(pAmb, gasMixes[0], cellPressures, GFLo, GFHi);
         this.gases = gasMixes;
     }
 

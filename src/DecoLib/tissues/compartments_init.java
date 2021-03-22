@@ -10,6 +10,8 @@ public class compartments_init {
     public double[] halfLivesHe;
     public double[] AValsHe;
     public double[] BValsHe;
+    public double GFLo;
+    public double GFHi;
 
     public compartments_init () {
         halfLivesN2 = new double[] {4.0,8.0,12.5,18.5,27.0,38.3,54.3,77.0,109.0, 
@@ -26,8 +28,8 @@ public class compartments_init {
                                 0.8757,0.8903,0.8997,0.9073,0.9122,0.9171,0.9217,0.9267};
     }
 
-    public compartments get_compartments (double pAmb, double[] gasMix, double[][] cellPressures) {
-        return new compartments(pAmb, gasMix, cellPressures, halfLivesN2, halfLivesHe, AValsN2, AValsHe, BValsN2, BValsHe);
+    public compartments get_compartments (double pAmb, double[] gasMix, double[][] cellPressures, double GFLo, double GFHi) {
+        return new compartments(GFLo, GFHi, pAmb, gasMix, cellPressures, halfLivesN2, halfLivesHe, AValsN2, AValsHe, BValsN2, BValsHe);
     }
     
 }

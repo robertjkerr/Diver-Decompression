@@ -17,14 +17,11 @@ public class algorithm {
         this.gases = gases;
     }
 
-    public double[] liveGas () {
-        return compartments.liveGas;
-    }
-
-    public double pO2 () {
-        double pAmb = compartments.getPAmb();
-        double pO2 = pAmb * liveGas()[0];
-        return pO2;
+    public int[] liveGas () {
+        double[] gas = compartments.gasMix;
+        int O2 = (int) ((1-gas[0]-gas[1])*100);
+        int He = (int) (gas[1]*100);
+        return new int[] {O2,He};
     }
 
     //Waits and advances time until the ascent ceiling changes
@@ -32,7 +29,7 @@ public class algorithm {
         double initCeiling = compartments.ceiling();
         double ceiling = compartments.ceiling();
         double t = 0;
-        while (ceiling == initCeiling && ceiling > 0) {
+        while (ceiling == initCeiling && compartments.realCeiling() > 0) {
             compartments.advT(dt);
             ceiling = compartments.ceiling();
             t=t+dt;}
@@ -41,54 +38,49 @@ public class algorithm {
 
     //Ascends compartments to new depth
     private void ascendToCeiling () {
-        double newPAmb;
-        if (compartments.ceiling() < 3){
-            newPAmb = (compartments.ceiling())/10 + 1;
-        }
-        else {
-            newPAmb = (compartments.ceiling()+3)/10 + 1;
-        }
-        
+        double newPAmb = compartments.ceiling()/10 +1;
         compartments.changePAmb(newPAmb);
     }
 
-    //Checks if a richer gas can be switched to
+    //Get pO2 of a gas {%O2,%He}
+    public double pO2 (double[] gas) {
+        double pAmb = compartments.pAmb;
+        double pO2 = pAmb * gas[0]/100;
+        return pO2;
+    }
+
+    //Checks if a richer gas can be switched to (and switches gas if possible)
     private void checkGas () {
-        double[] richMix = liveGas();
-        for (double[] gas: gases) {
-            if (gas[0]>richMix[0] && pO2()<1.6) {
-                richMix = gas;
-                compartments.switchGas(richMix);
-            }}
+        double[] richGas = gases[0];
+        for (double[] gas: gases){
+            if (gas[0]>richGas[0] && pO2(gas)<=1.61) { //max pO2 1.61 to account for error
+                richGas = gas;}}
+        compartments.switchGas(richGas);
     }
     
     //Determines ascent profile. Simply ascends to ceiling, waits until ceiling changes, then ascends again
     public int[][] ascent_profile () {
-        double depth = (compartments.pAmb-1)*10;
-        depth = depth - depth%3;
-        //Gets number of deco stops
-        
-        ascendToCeiling();
         compartments.set_GFgrad(compartments.ceiling());
-
-        //Gets stop times
         int[][] profile = new int[][] {};
         double stopDepth = compartments.ceiling();
+        double stopTime;
 
-        while (stopDepth > 6) {
+        while (compartments.realCeiling() > 0) {
             ascendToCeiling();
-            //Switch to richer gas if possible
             checkGas();
             stopDepth = compartments.ceiling();
-            double stopTime = waitAtDepth();
-            profile = append(profile, new int[] {(int) stopDepth, 
-                        (int) (stopTime/60 - (stopTime/60)%1) + 1});
+            stopTime = waitAtDepth();
+            profile = append(profile, new int[] 
+                        {(int) stopDepth, 
+                        (int) (stopTime/60 - (stopTime/60)%1) + 1
+                        //liveGas()[0]
+                        });
         }
-
         return profile;
     }
 
     //Determines no deco limit by pushing time at depth until ceiling != 0
+    /*
     public double NDL () {
         double NDL = 0;
         if (compartments.ceiling() == 0) {
@@ -100,17 +92,16 @@ public class algorithm {
         }
         return NDL/60;
     }
+    */
 
+    //Appends int[] element to an existing int[][] array
     private int[][] append(int[][] inArr, int[] elem) {
         int[][] outArr = new int[inArr.length+1][2];
         for (int i=0; i<inArr.length +1; i++) {
             if (i<inArr.length) {
-                outArr[i] = inArr[i];
-            }
+                outArr[i] = inArr[i];}
             else {
-                outArr[i] = elem;
-            }
-        }
+                outArr[i] = elem;}}
         return outArr;
     }
 }

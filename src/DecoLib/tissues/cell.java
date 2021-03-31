@@ -1,7 +1,5 @@
 package DecoLib.tissues;
 
-import java.lang.Math;
-
 public class cell {
 	//Class for individual tissue compartment (cell)
 	//Local subroutines find pressure differential (for both nitrogen and helium)

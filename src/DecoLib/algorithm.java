@@ -2,22 +2,15 @@ package DecoLib;
 
 import DecoLib.tissues.compartments;
 
-public class algorithm {
+public abstract class algorithm {
     //Decompression algorithm class
     //Determines the ascent profile for the current compartment status
 
-    //Copy of compartments object 
-    private compartments compartments;
-    private double dt;
-    private double[][] gases;
+    private static double dt;
+    private static compartments compartments;
+    //public double totalTime;
 
-    public algorithm (compartments compartments, double dt, double[][] gases) {
-        this.compartments = compartments.copy();
-        this.dt = dt;
-        this.gases = gases;
-    }
-
-    public int[] liveGas () {
+    public static int[] liveGas () {
         double[] gas = compartments.gasMix;
         int O2 = (int) ((1-gas[0]-gas[1])*100);
         int He = (int) (gas[1]*100);
@@ -25,7 +18,7 @@ public class algorithm {
     }
 
     //Waits and advances time until the ascent ceiling changes
-    private double waitAtDepth () {
+    private static double waitAtDepth () {
         double initCeiling = compartments.ceiling();
         double ceiling = compartments.ceiling();
         double t = 0;
@@ -33,47 +26,63 @@ public class algorithm {
             compartments.advT(dt);
             ceiling = compartments.ceiling();
             t=t+dt;}
+
+        //totalTime = totalTime + t;
+        //Account (conservatively) for ascent time (extra 1 min at depth)
+        for (int i=0; i<60/dt; i++) {
+            compartments.advT(dt);
+            //totalTime = totalTime + dt;
+        }    
         return t;
     }
 
-    //Ascends compartments to new depth
-    private void ascendToCeiling () {
-        double newPAmb = compartments.ceiling()/10 +1;
-        compartments.changePAmb(newPAmb);
-    }
-
-    //Get pO2 of a gas {%O2,%He}
-    public double pO2 (double[] gas) {
-        double pAmb = compartments.pAmb;
-        double pO2 = pAmb * gas[0]/100;
-        return pO2;
-    }
-
     //Checks if a richer gas can be switched to (and switches gas if possible)
-    private void checkGas () {
+    private static void checkGas (double[][] gases) {
         double[] richGas = gases[0];
         for (double[] gas: gases){
-            if (gas[0]>richGas[0] && pO2(gas)<=1.61) { //max pO2 1.61 to account for error
+            if (gas[0]>richGas[0] && compartments.pO2(gas)<=1.61) { //max pO2 1.61 to account for error
                 richGas = gas;}}
         compartments.switchGas(richGas);
     }
     
+    //Appends int[] element to an existing int[][] array
+    private static int[][] append(int[][] inArr, int[] elem) {
+        int[][] outArr = new int[inArr.length+1][2];
+        for (int i=0; i<inArr.length +1; i++) {
+            if (i<inArr.length) {
+                outArr[i] = inArr[i];}
+            else {
+                outArr[i] = elem;}}
+        return outArr;
+    }
+
     //Determines ascent profile. Simply ascends to ceiling, waits until ceiling changes, then ascends again
-    public int[][] ascent_profile () {
+    public static int[][] ascent_profile (compartments inCompartments, double[][] gases, double dtIn, int shallowStop) {
+        dt = dtIn;
+        compartments = inCompartments.copy();
         compartments.set_GFgrad(compartments.ceiling());
+
         int[][] profile = new int[][] {};
         double stopDepth = compartments.ceiling();
         double stopTime;
 
+        //Account for ascent time (wait at bottom)
+        double bottomDepth = (compartments.pAmb-1)*10;
+        double ascentTime = (bottomDepth-stopDepth)*60/9;
+        for (int i=0; i<ascentTime/dt; i++) {
+            compartments.advT(dt);
+            //totalTime = totalTime + dt;
+        }
+
         while (compartments.realCeiling() > 0) {
-            ascendToCeiling();
-            checkGas();
+            compartments.ascendToCeiling();
+            checkGas(gases);
             stopDepth = compartments.ceiling();
             stopTime = waitAtDepth();
             profile = append(profile, new int[] 
                         {(int) stopDepth, 
-                        (int) (stopTime/60 - (stopTime/60)%1) + 1
-                        //liveGas()[0]
+                        (int) (stopTime/60 - (stopTime/60)%1) + 1,
+                        liveGas()[0]
                         });
         }
         return profile;
@@ -93,15 +102,4 @@ public class algorithm {
         return NDL/60;
     }
     */
-
-    //Appends int[] element to an existing int[][] array
-    private int[][] append(int[][] inArr, int[] elem) {
-        int[][] outArr = new int[inArr.length+1][2];
-        for (int i=0; i<inArr.length +1; i++) {
-            if (i<inArr.length) {
-                outArr[i] = inArr[i];}
-            else {
-                outArr[i] = elem;}}
-        return outArr;
-    }
 }

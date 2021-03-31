@@ -1,7 +1,6 @@
 package DecoLib;
 
 import DecoLib.tissues.*;
-import java.util.Arrays;
 
 public class tracker {
     /* Main package class */
@@ -9,21 +8,22 @@ public class tracker {
     //Amalgamates compartments and algorithm into one class
     public compartments compartments;
     private double dt;
+    private int shallowStop;
 
     public double[][] gases;
 
     public tracker (double pAmb, double[][] gasMixes, double[][] cellPressures, 
-                        double dt, double GFLo, double GFHi) {
+                        double dt, int shallowStop, double[] GFs) {
         this.dt = dt;
+        this.shallowStop = shallowStop;
         compartments_init compartments_init = new compartments_init();
-        compartments = compartments_init.get_compartments(pAmb, gasMixes[0], cellPressures, GFLo, GFHi);
-        this.gases = gasMixes;
+        compartments = compartments_init.get_compartments(pAmb, gasMixes[0], cellPressures, GFs[0], GFs[1]);
+        gases = gasMixes;
     }
 
     //Retrieves ascent profile from algorithm
     public int[][] get_ascent_profile () {
-        algorithm algorithm = new algorithm(compartments, dt, gases);
-        return algorithm.ascent_profile();
+        return algorithm.ascent_profile(compartments, gases, dt, shallowStop);
     }
 
     //Loads tissues by setting depth constant for set time
@@ -33,13 +33,11 @@ public class tracker {
             compartments.advT(time);}
     }
 
-    /*
     //Returns ascent ceiling
     public double get_ceiling() {
         return compartments.realCeiling();
     }
-    */
-
+    
     //Gets no decompression limit from algorithm
     /*
     public double get_NDL() {

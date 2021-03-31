@@ -1,12 +1,9 @@
 package DecoLib.tissues;
 
-import java.util.Arrays;
-
 public class compartments {
     //Collective class for all tissue compartments in the body
     //Subroutines allow all cells to advance time, and change ambient pressure across the compartment array
 
-    
     private double[] halfLivesN2;
     private double[] halfLivesHe;
     private double[] AValsN2;
@@ -16,14 +13,14 @@ public class compartments {
     private int n;
     private double GFgrad;
     private boolean firstStop = true;
+    private double GFLo;
+    private double GFHi;
 
     public cell[] cells;
     public double[] liveGas;
     public double[] gasMix; //{fN2,fHe}
     public double pAmb;
-    public double GFLo;
-    public double GFHi;
-
+    
     //Enter gas mix as {%O2,%He}
     public compartments (double GFLo, double GFHi, double pAmb, double[] gasMix, double[][] cellPressures, 
                         double[] halfLivesN2, double[] halfLivesHe, 
@@ -117,5 +114,17 @@ public class compartments {
         firstStop = false;
         double firstCeil = firstStopDepth/10 + 1;
         GFgrad = (GFHi-GFLo)/(1-firstCeil);
+    }
+
+    //Ascends to conservative ceiling
+    public void ascendToCeiling () {
+        double newPAmb = ceiling()/10 +1;
+        changePAmb(newPAmb);
+    }
+
+    //Get pO2 of a gas {%O2,%He}
+    public double pO2 (double[] gas) {
+        double pO2 = pAmb * gas[0]/100;
+        return pO2;
     }
 }

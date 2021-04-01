@@ -68,7 +68,7 @@ public class compartments {
 
     //Finds the true (most aggressive) ceiling
     public double realCeiling () {
-        double ceiling = 0;
+        double ceiling = -10;
         for (cell cell: cells) {
             if (cell.ceiling() > ceiling) {
                 ceiling = cell.ceiling();}}

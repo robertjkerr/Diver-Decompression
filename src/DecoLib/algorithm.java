@@ -60,8 +60,8 @@ public abstract class algorithm {
     public static int[][] ascent_profile (compartments inCompartments, double[][] gases, double dtIn, int shallowStop) {
         dt = dtIn;
         compartments = inCompartments.copy();
-        compartments.set_GFgrad(compartments.ceiling());
 
+        compartments.set_GFgrad(compartments.ceiling());
         int[][] profile = new int[][] {};
         double stopDepth = compartments.ceiling();
         double stopTime;
@@ -89,17 +89,16 @@ public abstract class algorithm {
     }
 
     //Determines no deco limit by pushing time at depth until ceiling != 0
-    /*
-    public double NDL () {
+    public static double NDL (compartments inCompartments, double dtIn) {
+        dt = dtIn;
+        compartments = inCompartments.copy();
+
         double NDL = 0;
-        if (compartments.ceiling() == 0) {
-            double ceiling = 0;
-            while (ceiling == 0) {
-                compartments.advT(dt);
-                NDL = NDL + dt;
-                ceiling = compartments.ceiling();}
-        }
-        return NDL/60;
+        while (compartments.ceiling() == 0){
+            compartments.advT(dt);
+            NDL = NDL + dt;}
+        //Returns NDL rounded up since it is rather conservative anyway
+        return (int) (NDL/60 + (1-(NDL/60)%1));
     }
-    */
+    
 }

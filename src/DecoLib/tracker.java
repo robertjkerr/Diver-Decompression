@@ -1,7 +1,5 @@
 package DecoLib;
 
-import java.util.Arrays;
-
 import DecoLib.tissues.*;
 
 public class tracker {
@@ -33,7 +31,7 @@ public class tracker {
         compartments.changePAmb(depth/10 + 1);
         for (int i=0; i<time*60/dt; i++){
             compartments.advT(dt);}
-        //System.out.println(compartments.ceiling());
+        //System.out.println(compartments.realCeiling());
     }
 
     //Returns ascent ceiling
@@ -42,10 +40,8 @@ public class tracker {
     }
     
     //Gets no decompression limit from algorithm
-    /*
     public double get_NDL() {
-        algorithm algorithm = new algorithm(compartments, dt, gases);
-        return algorithm.NDL();
+        return algorithm.NDL(compartments, dt);
     }
-    */
+    
 }

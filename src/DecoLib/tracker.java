@@ -1,5 +1,7 @@
 package DecoLib;
 
+import java.util.Arrays;
+
 import DecoLib.tissues.*;
 
 public class tracker {
@@ -29,8 +31,9 @@ public class tracker {
     //Loads tissues by setting depth constant for set time
     public void bottom_segment (double depth, double time) {
         compartments.changePAmb(depth/10 + 1);
-        for (int i=0; i<time/dt; i++){
-            compartments.advT(time);}
+        for (int i=0; i<time*60/dt; i++){
+            compartments.advT(dt);}
+        //System.out.println(compartments.ceiling());
     }
 
     //Returns ascent ceiling

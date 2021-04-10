@@ -1,4 +1,4 @@
-package DecoLib.tissues;
+package decolib.tissues;
 
 public class compartments_init {
     //Class for containing Buhlmann ZHL-16C tissue compartment data

@@ -1,6 +1,6 @@
-package DecoLib;
+package decolib;
 
-import DecoLib.tissues.*;
+import decolib.tissues.*;
 
 public class tracker {
     /* Main package class */

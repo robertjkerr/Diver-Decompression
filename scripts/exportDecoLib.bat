@@ -1,16 +1,17 @@
 @ECHO OFF
-REM Creates JAR file in /bin containing compiled DecoLib classes
+REM Creates JAR file in /bin containing compiled decolib classes
 
 cd ..
 mkdir bin
 cd src
 
-javac -d ../bin DecoLib/tissues/cell.java
-javac -d ../bin -cp ../bin DecoLib/tissues/compartments.java
-javac -d ../bin -cp ../bin DecoLib/tissues/compartments_init.java
-javac -d ../bin -cp ../bin DecoLib/algorithm.java
-javac -d ../bin -cp ../bin DecoLib/tracker.java
+ECHO Compiling decolib classes...
+javac -d ../bin java/decolib/tissues/cell.java
+javac -d ../bin -cp ../bin java/decolib/tissues/compartments.java
+javac -d ../bin -cp ../bin java/decolib/tissues/compartments_init.java
+javac -d ../bin -cp ../bin java/decolib/algorithm.java
+javac -d ../bin -cp ../bin java/decolib/tracker.java
 
 cd ../bin
-jar cf DecoLib.jar DecoLib
-rm -r DecoLib
+jar cf decolib.jar decolib
+rm -r decolib

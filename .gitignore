@@ -1,3 +1,7 @@
 src/DecoLib/example_DecoLib.java
 src/todo.txt
 .vscode
+
+node_modules
+bin
+out

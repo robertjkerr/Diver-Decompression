@@ -1,4 +1,4 @@
-package DecoLib.tissues;
+package decolib.tissues;
 
 public class cell {
 	//Class for individual tissue compartment (cell)

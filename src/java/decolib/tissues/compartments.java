@@ -1,4 +1,4 @@
-package DecoLib.tissues;
+package decolib.tissues;
 
 public class compartments {
     //Collective class for all tissue compartments in the body

@@ -1,6 +1,6 @@
-package DecoLib;
+package decolib;
 
-import DecoLib.tissues.compartments;
+import decolib.tissues.compartments;
 
 public abstract class algorithm {
     //Decompression algorithm class

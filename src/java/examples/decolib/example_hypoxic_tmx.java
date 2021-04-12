@@ -1,6 +1,6 @@
-package examples.DecoLib;
+package examples.decolib;
 
-import DecoLib.tracker;
+import decolib.tracker;
 import java.util.Arrays;
 
 /*

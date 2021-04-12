@@ -1,6 +1,6 @@
-package examples.DecoLib;
+package examples.decolib;
 
-import DecoLib.tracker;
+import decolib.tracker;
 
 /*
 Basic example to demonstrate a 20m dive using EAN32 as the gas.

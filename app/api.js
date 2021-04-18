@@ -1,16 +1,21 @@
-var java = require("java");
-java.classpath.push("bin/decolib.jar");
 
-var planner = java.import("decolib.planner");
 
 //console.log(planner.sampleSync());
 
-function get_deco(depth, time) {
-    let deco = planner.deco_dive_stringSync(depth, time);
-    return deco;
-}
+function get_deco() {
+    let java = require("java");
+    java.classpath.push("bin/decolib.jar");
+    let planner = java.import("decolib.planner");
 
-console.log(get_deco(45,30));
+    let depth = 45;
+    let time = 30;
+
+    let deco = planner.deco_dive_stringSync(depth, time);
+    //console.log(deco);
+    //alert(deco.join());
+
+    alert("test");
+}
 
 function get_ndl(depth) {
     return planner.no_decoSync(depth);

@@ -24,7 +24,7 @@ public abstract class planner {
 		tracker tracker = new_tracker(gasMixes);
 		
 		//bottom segment and get ascent profile
-		tracker.bottom_segment(45, 40);
+		tracker.bottom_segment(depth, time);
         int[][] ascent_profile = tracker.get_ascent_profile();
 
 		return ascent_profile;
@@ -48,10 +48,10 @@ public abstract class planner {
 		return tracker.get_NDL();
 	}
 
-	/*
+	
 	//Sample deco dive
 	public static String[] sample () {
-		double[][] gasMixes = new double[][] {{21,0},{50,0}};
-		return deco_dive_string(45,40,gasMixes);
-	}*/
+		//double[][] gasMixes = new double[][] {{21,0},{50,0}};
+		return deco_dive_string(45,40);
+	}
 }

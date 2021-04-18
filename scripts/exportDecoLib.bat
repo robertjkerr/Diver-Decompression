@@ -17,4 +17,5 @@ javac -d ../bin -cp ../bin java/decolib/planner.java
 cp java/decolib/README.md ../bin/decolib
 cd ../bin
 jar cf decolib.jar decolib
+echo Done!
 rm -r decolib

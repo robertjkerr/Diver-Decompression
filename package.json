@@ -1,38 +1,22 @@
 {
-  "name": "dive-planner",
-  "version": "1.0.0",
-  "description": "WIP Electron/Java scuba diver decompression planner.",
-  "main": "src/app/main.js",
+  "name": "diver-decompression",
+  "version": "0.0.0",
+  "productName": "Rob's deco calculator",
+  "description": "WIP Java/Electron diver decompression calculator",
+  "main": "app/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
-  },
-  "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/RobertK20/Diver-Decompression.git"
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
   },
   "keywords": [],
-  "author": "Robert Kerr",
+  "author": {
+    "name": "Robert Kerr",
+    "email": "robert_kerr@blueyonder.co.uk"
+  },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/RobertK20/Diver-Decompression/issues"
-  },
-  "homepage": "https://github.com/RobertK20/Diver-Decompression#readme",
-  "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.54",
-    "@electron-forge/maker-deb": "^6.0.0-beta.54",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
-    "@electron-forge/maker-zip": "^6.0.0-beta.54",
-    "electron": "^12.0.2"
-  },
-  "dependencies": {
-    "electron-squirrel-startup": "^1.0.0",
-    "java": "^0.12.1"
-  },
   "config": {
     "forge": {
       "packagerConfig": {},
@@ -40,7 +24,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "dive_planner"
+            "name": "decocalc"
           }
         },
         {
@@ -59,5 +43,17 @@
         }
       ]
     }
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
+    "java": "^0.12.1"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "electron": "12.0.4"
   }
 }

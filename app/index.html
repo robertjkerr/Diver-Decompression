@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <title>Deco Planner</title>
+    </head>
+
+    <body text = 'silver' bgcolor = 'navy'>
+        <hr />
+        <h3>Diver Decompression Planner</h3>
+        <p>Enter bottom depth and time</p>
+
+    
+
+    </body>
+
+    <form action='/action_page.php'>
+        <label for='depth'>Depth:</label>
+        depth: <input type='text' id='depth' name='depth'><br><br>
+        <label for='time'>Bottom time:</label>
+        time: <input type='text' id='time' name='time'><br><br>
+        <button onclick="get_deco()">Calculate deco</button>
+    </form>
+   
+    <script>
+        function get_deco() 
+        {
+            
+            var java = require("java");
+            java.classpath.push("bin/decolib.jar");
+            var planner = java.import("decolib.planner");
+            
+            var depth = parseInt(document.getElementById('depth').value);
+            var time = parseInt(document.getElementById('time').value);
+
+            //var deco = planner.deco_dive_stringSync(depth, time);
+            
+            alert(depth+time);
+        }
+    </script>
+
+
+
+</html>

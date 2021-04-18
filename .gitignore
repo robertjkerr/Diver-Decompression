@@ -1,7 +1,6 @@
-src/DecoLib/example_DecoLib.java
 src/todo.txt
 .vscode
-
+build
 node_modules
 bin
 out

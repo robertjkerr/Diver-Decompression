@@ -1,8 +1,6 @@
 
-
-//console.log(planner.sampleSync());
-
 function get_deco() {
+
     let java = require("java");
     java.classpath.push("bin/decolib.jar");
     let planner = java.import("decolib.planner");
@@ -10,15 +8,15 @@ function get_deco() {
     let depth = 45;
     let time = 30;
 
-    let deco = planner.deco_dive_stringSync(depth, time);
-    //console.log(deco);
-    //alert(deco.join());
+    let deco = planner.deco_dive_stringSync(depth, time);    
 
-    alert("test");
+    
+    return deco;
 }
 
-function get_ndl(depth) {
-    return planner.no_decoSync(depth);
+async function testdeco() {
+    const deco = await get_deco();
+    alert("test");
 }
 
 function test() {

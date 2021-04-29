@@ -1,9 +1,9 @@
 @ECHO OFF
-REM builds application
+REM Builds both frontend and backend
 
 cd scripts
 
 CALL exportDecoLib.bat
-CALL buildApp.bat
+CALL buildMods.bat
 
-ECHO Application built!
+ECHO Modules built!

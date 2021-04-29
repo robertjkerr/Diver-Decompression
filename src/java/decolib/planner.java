@@ -19,12 +19,18 @@ public abstract class planner {
 	}
 
 	//Gets ascent profile
-	public static int[][] deco_dive (int depth, int time, double[][] gasMixes) {
+	public static int[][] deco_dive (double[][] gasMixes, int[]... segments ) {
 		//Creates new tracker object
 		tracker tracker = new_tracker(gasMixes);
 		
-		//bottom segment and get ascent profile
-		tracker.bottom_segment(depth, time);
+		//Complete all bottom segments
+		for (int[] segment: segments) {
+			int depth = segment[0];
+			int time = segment[1];
+			tracker.bottom_segment(depth, time);
+		}
+		
+		//get ascent profile
         int[][] ascent_profile = tracker.get_ascent_profile();
 
 		return ascent_profile;
@@ -33,7 +39,7 @@ public abstract class planner {
 	//Gets ascent profile and converts to string array
 	public static String[] deco_dive_string(int depth, int time) {//, double[][] gasMixes) {
 		double[][] gasMixes = new double[][] {{21,00},{50,0}};
-		int[][] ascent_profile = deco_dive(depth, time, gasMixes);
+		int[][] ascent_profile = deco_dive(gasMixes, new int[]{depth, time});
 		int numStops = ascent_profile.length;
 		String[] prof_string = new String[numStops];
 		for (int i=0; i<numStops; i++) {
@@ -49,9 +55,4 @@ public abstract class planner {
 	}
 
 	
-	//Sample deco dive
-	public static String[] sample () {
-		//double[][] gasMixes = new double[][] {{21,0},{50,0}};
-		return deco_dive_string(45,40);
-	}
 }

@@ -3,23 +3,43 @@
     <head>
         <meta charset=utf-8 />
         <title>Deco Planner</title>
-        <script type "text/javascript" src="api.js"></script>
+        <!--<script type "text/javascript" src="api.js"></script>-->
     </head>
 
     <body text = 'silver' bgcolor = 'navy'>
         <hr />
         <h3>Diver Decompression Planner</h3>
         <p>Enter bottom depth and bottom time</p>
-    </body>
-
-    <form>
-        Depth: <input type='text' id='depth' name='depth'><br><br>
-        Time: <input type='text' id='time' name='dime'><br><br>
-        <button onclick="testdeco()">Calculate deco</button>
-    </form>
    
-    
+	<button onclick="get_deco()">Calculate deco</button>
 
+	<script>
+		function get_deco() {
+			try {	
+				let java = require("java");
+				java.classpath.push("bin/decolib.jar");
+			
+				let planner = java.import("decolib.planner");
+
+    			let depth = 45;
+    			let time = 30;
+
+   				let deco = planner.deco_dive_stringSync(depth, time);
+				alert(deco);
+			} catch (error) {
+				alert(error.message);
+			}	
+			alert("test");
+
+		}
+
+		function test() {
+			//var java = require("java");
+			alert("test");
+		}
+	</script>
+
+    </body>
 
 
 </html>

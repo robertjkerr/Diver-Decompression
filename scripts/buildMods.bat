@@ -1,5 +1,5 @@
 @ECHO OFF
-REM Builds npm modules 
+REM A script to install and build npm modules 
 
 cd ..
 

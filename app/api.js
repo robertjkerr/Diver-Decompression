@@ -14,11 +14,9 @@ function get_deco() {
     return deco;
 }
 
-async function testdeco() {
-    const deco = await get_deco();
-    alert("test");
-}
-
 function test() {
     alert("test");
 }
+
+
+

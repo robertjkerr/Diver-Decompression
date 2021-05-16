@@ -1,9 +1,10 @@
 @ECHO OFF
 REM Builds both frontend and backend
 
-cd scripts
+CD scripts
 
 CALL exportDecoLib.bat
 CALL buildMods.bat
 
+CD ..
 ECHO Modules built!

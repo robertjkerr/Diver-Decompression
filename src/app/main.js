@@ -9,6 +9,6 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
     app.allowRendererProcessReuse = false;
     let mainWin = new BrowserWindow({width: 800, height: 600, webPreferences: {nodeIntegration: true, contextIsolation: false}});
-    mainWin.loadFile('app/index.html');
+    mainWin.loadFile('src/app/index.html');
     mainWin.on('closed', function() {mainWin = null;})
 })

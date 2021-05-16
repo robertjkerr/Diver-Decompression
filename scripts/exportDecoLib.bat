@@ -1,10 +1,10 @@
 @ECHO OFF
 REM Creates JAR file in /bin containing compiled decolib classes
 
-cd ..
-rmdir /s /Q bin
-mkdir bin
-cd src
+CD ..
+RMDIR /S /Q bin 
+MKDIR bin
+CD src
 
 ECHO Compiling decolib classes...
 javac -d ..\bin java\decolib\tissues\cell.java
@@ -14,10 +14,10 @@ javac -d ..\bin -cp ..\bin java\decolib\algorithm.java
 javac -d ..\bin -cp ..\bin java\decolib\tracker.java
 javac -d ..\bin -cp ..\bin java\decolib\planner.java
 
-copy java\decolib\README.md ..\bin\decolib
-cd ..\bin
+COPY java\decolib\README.md ..\bin\decolib
+CD ..\bin
 jar cf decolib.jar decolib
-echo Done!
-rmdir /s /Q decolib
+ECHO Done!
+RMDIR /S /Q decolib
 
-cd ../scripts
+CD ../scripts

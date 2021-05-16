@@ -4,14 +4,14 @@ WIP Java/Electron scuba diver decompression planner. Decompression library simul
 
 ZHL-16C half-times, A and B values for both inert gases are contained in src/DecoLib/tissues/compartments_init.java.
 
-## Major dependencies
+### Major dependencies
 
  - Java
  - Node.js and npm
- - MSVS Windows Build Tools and a Python2.7 installation (make sure to set your Python27 path and MSVS version correctly in you .npmrc)
+ - (Windows only) MSVS Windows Build Tools and a Python2.7 installation (make sure to set your Python2.7 path and MSVS version correctly in your .npmrc)
 
-## Windows build instructions
+### Windows build instructions
 
-Execute `build.bat`, which compiles the java backend, and builds the node modules.
+Execute `.\build.bat` with `cmd.exe`, which compiles the Java backend, and builds the Nodejs modules.
 
 Execute `npm start` to start the app.

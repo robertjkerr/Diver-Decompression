@@ -3,8 +3,7 @@ REM Builds both frontend and backend
 
 CD scripts
 
-CALL exportDecoLib.bat
-CALL buildMods.bat
-
+CALL exportDecoLib
+CALL buildMods
 CD ..
 ECHO Modules built!

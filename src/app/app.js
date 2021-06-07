@@ -6,8 +6,9 @@ java.classpath.push("bin/decolib.jar");
 
 
 function get_deco(depth, time) {
-	let tracker = java.newInstanceSync("decolib.tracker");
-	
+	let planner = java.import("decolib.planner");
+	let deco = planner.deco_dive_stringSync(depth, time);
+	alert(deco);	
 }
 
 

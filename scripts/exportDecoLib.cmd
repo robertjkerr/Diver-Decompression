@@ -8,8 +8,8 @@ CD src
 
 ECHO Compiling decolib classes...
 javac -d ..\bin java\decolib\tissues\cell.java
+javac -d ..\bin -cp ..\bin java\decolib\tissues\compartments_constants.java
 javac -d ..\bin -cp ..\bin java\decolib\tissues\compartments.java
-javac -d ..\bin -cp ..\bin java\decolib\tissues\compartments_init.java
 javac -d ..\bin -cp ..\bin java\decolib\algorithm.java
 javac -d ..\bin -cp ..\bin java\decolib\tracker.java
 javac -d ..\bin -cp ..\bin java\decolib\planner.java

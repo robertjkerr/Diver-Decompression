@@ -1,15 +1,9 @@
 package decolib.tissues;
 
-public class compartments {
+public class compartments extends compartments_constants {
     //Collective class for all tissue compartments in the body
     //Subroutines allow all cells to advance time, and change ambient pressure across the compartment array
 
-    private double[] halfLivesN2;
-    private double[] halfLivesHe;
-    private double[] AValsN2;
-    private double[] AValsHe;
-    private double[] BValsN2;
-    private double[] BValsHe;
     private int n;
     private double GFgrad;
     private boolean firstStop = true;
@@ -22,22 +16,12 @@ public class compartments {
     public double pAmb;
     
     //Enter gas mix as {%O2,%He}
-    public compartments (double GFLo, double GFHi, double pAmb, double[] gasMix, double[][] cellPressures, 
-                        double[] halfLivesN2, double[] halfLivesHe, 
-                        double[] AValsN2, double[] AValsHe, 
-                        double[] BValsN2, double[] BValsHe) {
+    public compartments (double GFLo, double GFHi, double pAmb, double[] gasMix, double[][] cellPressures) {
 
         this.pAmb = pAmb;
         this.GFHi = GFHi;
         this.GFLo = GFLo;
         
-        this.halfLivesN2 = halfLivesN2;
-        this.halfLivesHe = halfLivesHe;
-        this.AValsN2 = AValsN2;
-        this.BValsN2 = BValsN2;
-        this.AValsHe = AValsHe;
-        this.BValsHe = BValsHe;
-
         n = halfLivesN2.length;
         this.liveGas = gasMix;
         this.gasMix = new double[] {(100-gasMix[0]-gasMix[1])/100, gasMix[1]/100};
@@ -89,8 +73,7 @@ public class compartments {
 
         for (int i=0; i<n; i++) {
             cellPressures[i] = cells[i].cellPres;}
-        compartments copyObj = new compartments(GFLo, GFHi, pAmb, newGas, cellPressures, halfLivesN2, 
-                                                halfLivesHe, AValsN2, AValsHe, BValsN2, BValsHe);
+        compartments copyObj = new compartments(GFLo, GFHi, pAmb, newGas, cellPressures);
         return copyObj;
     }
     

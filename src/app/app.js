@@ -2,14 +2,14 @@
 
 
 
-function get_deco(depth, time) {
+function get_deco(gasMixes, GFs, segments) {
 	let java = require("java");
 	java.classpath.push("bin/decolib.jar");
 
 	let planner = java.import("decolib.planner");
 
 
-	let deco = planner.deco_dive_stringSync(depth, time);
+	let deco = planner.deco_dive_stringSync(gasMixes, segments, GFs);
 	alert(deco);
 }
 

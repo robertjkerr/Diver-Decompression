@@ -1,6 +1,6 @@
 # Decompression Planner
 
-## DISCLAIMER
+## WARNING
 
 DO NOT use this software to plan real dives and determine safe and/or accurate decompression/no-decompression times. This project is being developed for learning and for fun. It should not be applied in any real use case, and certainly not in a case where somebody's life depends on it.
 
@@ -19,6 +19,6 @@ ZHL-16C half-times, A and B values for both inert gases are contained in `src/De
 
 ### Build instructions
 
-Execute `.\build.cmd` or `./build.sh` on Windows (cmd) and *nix (bash) respectively, which compiles the Java backend, and builds the Nodejs modules.
+Execute `.\build.cmd` or `./build.sh` on Windows (cmd) or *nix (bash) respectively, which compiles the Java backend, and builds the Nodejs modules.
 
 Execute `npm start` to start the app.

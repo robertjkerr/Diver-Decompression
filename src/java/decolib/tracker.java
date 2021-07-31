@@ -16,8 +16,7 @@ public class tracker {
                         double dt, int shallowStop, double[] GFs) {
         this.dt = dt;
         this.shallowStop = shallowStop;
-        compartments_init compartments_init = new compartments_init();
-        compartments = compartments_init.get_compartments(pAmb, gasMixes[0], cellPressures, GFs[0], GFs[1]);
+        compartments = new compartments(GFs[0], GFs[1], pAmb, gasMixes[0], cellPressures);
         gases = gasMixes;
     }
 
@@ -31,7 +30,6 @@ public class tracker {
         compartments.changePAmb(depth/10 + 1);
         for (int i=0; i<time*60/dt; i++){
             compartments.advT(dt);}
-        //System.out.println(compartments.realCeiling());
     }
 
     //Returns ascent ceiling
